@@ -1,0 +1,94 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    # Optional: Only run on specific file changes
+    # paths:
+    #   - "src/**/*.ts"
+    #   - "src/**/*.tsx"
+    #   - "src/**/*.js"
+    #   - "src/**/*.jsx"
+
+jobs:
+  claude-review:
+    # Optional: Filter by PR author
+    # if: |
+    #   github.event.pull_request.user.login == 'external-contributor' ||
+    #   github.event.pull_request.user.login == 'new-developer' ||
+    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        id: claude-review
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Optional: Only needed for certain features
+
+          # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4.1)
+          # model: "claude-opus-4-1-20250805"
+
+          custom_instructions: |
+            - 以下の共通レビュー観点を重視してください：
+              * 責務分離の適切性（何をどこで処理するかの原則）
+              * システム内で同じことを違うやり方で実装していないか
+              * 不要なコード・未使用のコード
+              * ライブラリが提供する機能をハードコードで置き換えていないか
+              * 型安全性・バリデーションの不備
+              * エラーハンドリングの問題
+              * セキュリティ上の懸念
+            - リポジトリの技術スタックに応じた専用ガイドラインを参照してください：
+              * フロントエンド: @docs/frontend-guidelines.md
+              * バックエンド: @docs/backend-guidelines.md
+            - 抜け漏れがないように ultrathink して考えてください
+            - 常に日本語で返信してください
+
+          # Direct prompt for automated review (no @claude mention needed)
+          direct_prompt: |
+            このプルリクエストをレビューして、以下の点についてのみ指摘してください：
+            - 考慮不足や潜在的な問題
+            - バグやエラーの可能性  
+            - セキュリティ上の懸念
+            - パフォーマンス上の問題
+            - 明らかに改善できる部分
+            
+            OKなポイントや正常に動作する部分については言及しないでください。
+            問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
+
+          # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
+          # use_sticky_comment: true
+          
+          # Optional: Customize review based on file types
+          # direct_prompt: |
+          #   Review this PR focusing on:
+          #   - For TypeScript files: Type safety and proper interface usage
+          #   - For API endpoints: Security, input validation, and error handling
+          #   - For React components: Performance, accessibility, and best practices
+          #   - For tests: Coverage, edge cases, and test quality
+          
+          # Optional: Different prompts for different authors
+          # direct_prompt: |
+          #   ${{ github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR' && 
+          #   'Welcome! Please review this PR from a first-time contributor. Be encouraging and provide detailed explanations for any suggestions.' ||
+          #   'Please provide a thorough code review focusing on our coding standards and best practices.' }}
+          
+          # Optional: Add specific tools for running tests or linting
+          # allowed_tools: "Bash(npm run test),Bash(npm run lint),Bash(npm run typecheck)"
+          
+          # Optional: Skip review for certain conditions
+          # if: |
+          #   !contains(github.event.pull_request.title, '[skip-review]') &&
+          #   !contains(github.event.pull_request.title, '[WIP]')
