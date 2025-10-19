@@ -1,4 +1,4 @@
-# Shared Development Guidelines
+# Shared CodeReview Guidelines
 
 このリポジトリは GitHub Actions 経由で Claude Code によるコードレビューの指標を管理するためのものです。
 
