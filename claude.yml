@@ -1,0 +1,73 @@
+name: Claude Code
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read # Required for Claude to read CI results on PRs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Clone shared codereview guidelines
+        run: |
+          git clone --depth 1 https://github.com/Everforth/shared-codereview-guidelines.git
+          echo "Guidelines repository cloned successfully"
+
+      - name: Run Claude Code
+        id: claude
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+          # This is an optional setting that allows Claude to read CI results on PRs
+          additional_permissions: |
+            actions: read
+
+          # Optional: Allow Claude to run specific commands
+          allowed_tools: "Bash(npm install),Bash(npm run *)"
+
+          # Optional: Add custom instructions for Claude to customize its behavior for your project
+          custom_instructions: |
+            以下のガイドラインを重視して回答してください：
+            - 考慮不足や潜在的な問題
+            - バグやエラーの可能性
+            - セキュリティ上の懸念
+            - パフォーマンス上の問題
+            - 明らかに改善できる部分
+
+            リポジトリの技術スタックに応じた専用ガイドラインを参照してください：
+            - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
+            - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+
+            抜け漏れがないように ultrathink して考えてください。
+            常に日本語で返信してください。
+
+            具体的な依頼がない場合、コードレビューを行ってください。
+            コードレビューを行う際は、もしあれば直近のclaudeのコメント以降の差分にのみ着目し、問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
+            良い点の言及・総評は不要です。
+
+          # Optional: Custom environment variables for Claude
+          # claude_env: |
+          #   NODE_ENV: test
