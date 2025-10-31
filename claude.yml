@@ -62,14 +62,14 @@ jobs:
             - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
             - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
 
-            抜け漏れがないように ultrathink して考えてください。
-            常に日本語で返信してください。
-
             具体的な依頼がない場合、コードレビューを行ってください。
             コードレビューを行う際は、もしあれば直近のclaudeのコメント以降の差分にのみ着目し、問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
             良い点の言及・総評は不要です。
             PR の説明文 や リンクされた issue にも目を通し、背景や目的を理解した上でレビューを行ってください。
             意図が不明な場合は質問してください。
+
+            ultrathink してください。
+            常に日本語で返信してください。
 
           # Optional: Custom environment variables for Claude
           # claude_env: |
