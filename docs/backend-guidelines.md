@@ -5,14 +5,14 @@
 以下の順序でコード変更を確認し、問題が見つかった最初の1つの層を特定してください。
 順序は必ず守ってください。
 
-1. DB層（Entity定義, 型定義, DTO, スキーマ定義 等）
+1. DB層（Entity定義, 型定義, スキーマ定義 等）
    - データモデルの整合性、制約・インデックスの適切性、型定義の一貫性
 
-2. Service層（ビジネスロジック、データ処理 等）
-   - ビジネスロジックの正確性、トランザクション境界の適切性、データ変換処理
-
-3. Controller層（エンドポイント、リクエスト/レスポンス処理 等）
+2. Controller層（エンドポイント、リクエスト/レスポンス処理、DTO 等）
    - エンドポイント設計、バリデーション・エラーハンドリング、HTTPステータスコード
+
+3. Service層（ビジネスロジック、データ処理 等）
+   - ビジネスロジックの正確性、トランザクション境界の適切性、データ変換処理
 
 4. その他（テストコード, 設定ファイル 等）
 
@@ -26,8 +26,8 @@ STEP 1で特定した層に対応するガイドラインを確認してくだ�
 該当する1つのガイドラインのみ参照し、他の層のガイドラインは絶対に開かないでください。
 
 - DB層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/1_db.md
-- Service層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/2_service.md
-- Controller層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/3_controller.md
+- Controller層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/2_controller.md
+- Service層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/3_service.md
 - その他を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/4_other.md
 
 ### STEP 3: レビュー実施
