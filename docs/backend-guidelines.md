@@ -6,22 +6,36 @@
 順序は必ず守ってください。
 
 1. DB層（Entity定義, 型定義, DTO, スキーマ定義 等）
-
-- データモデルの整合性、制約・インデックスの適切性、型定義の一貫性
+   - データモデルの整合性、制約・インデックスの適切性、型定義の一貫性
 
 2. Service層（ビジネスロジック、データ処理 等）
-
-- ビジネスロジックの正確性、トランザクション境界の適切性、データ変換処理
+   - ビジネスロジックの正確性、トランザクション境界の適切性、データ変換処理
 
 3. Controller層（エンドポイント、リクエスト/レスポンス処理 等）
-
-- エンドポイント設計、バリデーション・エラーハンドリング、HTTPステータスコード
+   - エンドポイント設計、バリデーション・エラーハンドリング、HTTPステータスコード
 
 4. その他（テストコード, 設定ファイル 等）
 
-特定すべき層を確定させてからSTEP 2に進んでください。
+【完了条件】特定した層を明記してください → 【　　　】層
 
-### STEP 2: レビュー実施
+### STEP 2: ガイドライン確認
+
+【開始条件】STEP 1で層を特定済みであること
+
+STEP 1で特定した層に対応するガイドラインを確認してください。
+該当する1つのガイドラインのみ参照し、他の層のガイドラインは絶対に開かないでください。
+
+- DB層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/1_db.md
+- Service層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/2_service.md
+- Controller層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/3_controller.md
+- その他を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/4_other.md
+
+### STEP 3: レビュー実施
+
+**【開始条件】**
+
+- STEP 1で層を特定済みであること
+- STEP 2で該当するガイドラインを確認済みであること
 
 STEP 1で特定した1つの層のみをレビューしてください。
 
@@ -42,8 +56,6 @@ STEP 1で特定した1つの層のみをレビューしてください。
 
 - 「次にService層を確認してください」などの指示を出さない
 
-4. レビュー対象以外の層別レビューガイドラインを確認しない
-
 ### レビュー観点
 
 #### 基本原則
@@ -51,14 +63,3 @@ STEP 1で特定した1つの層のみをレビューしてください。
 - コードの可読性と保守性を最優先
 - 既存の設計パターンやベストプラクティスに従う
 - 無駄を削ぎ落とし、シンプルで綺麗なコードを目指す
-
-#### 層別レビューガイドライン
-
-STEP 1で特定した層に応じて、以下の該当するガイドラインを参照してください。
-
-STEP 1で層を特定するまで参照せず、特定した層のガイドラインのみを参照してください。
-
-1. DB層: @shared-codereview-guidelines/docs/backend-layers/1_db.md
-2. Service層: @shared-codereview-guidelines/docs/backend-layers/2_service.md
-3. Controller層: @shared-codereview-guidelines/docs/backend-layers/3_controller.md
-4. その他: @shared-codereview-guidelines/docs/backend-layers/4_other.md
