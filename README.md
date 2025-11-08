@@ -1,6 +1,6 @@
 # Shared CodeReview Guidelines
 
-このリポジトリは GitHub Actions 経由で Claude Code によるコードレビュー・開発支援を受けるためのGitHub  Actions と Everforth におけるコードレビューの指標を管理するためのものです。
+このリポジトリは GitHub Actions 経由で Claude Code によるコードレビュー・開発支援を受けるためのGitHub Actions と Everforth におけるコードレビューの指標を管理するためのものです。
 
 ## Setup
 
