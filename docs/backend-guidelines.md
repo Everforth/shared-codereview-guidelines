@@ -52,7 +52,9 @@ STEP 1で特定した1つの層のみをレビューしてください。
 
 #### 層別レビューガイドライン
 
-STEP 1で特定した層に応じて、以下の該当するガイドラインを参照してください：
+STEP 1で特定した層に応じて、以下の該当するガイドラインを参照してください。
+
+STEP 1で層を特定するまで参照せず、特定した層のガイドラインのみを参照してください。
 
 1. DB層: @shared-codereview-guidelines/docs/backend-layers/1_db.md
 2. Service層: @shared-codereview-guidelines/docs/backend-layers/2_service.md
