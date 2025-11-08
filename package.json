@@ -1,0 +1,25 @@
+{
+  "name": "shared-codereview-guidelines",
+  "version": "1.0.0",
+  "description": "このリポジトリは GitHub Actions 経由で Claude Code によるコードレビュー・開発支援を受けるためのGitHub  Actions と Everforth におけるコードレビューの指標を管理するためのものです。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "format": "prettier --write \"**/*.md\""
+  },
+  "lint-staged": {
+    "*.md": "prettier --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2"
+  }
+}
