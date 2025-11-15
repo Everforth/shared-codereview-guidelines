@@ -14,3 +14,12 @@
 
 - Migrationの適切な統合
 - モジュール間で名前の衝突を避ける
+
+### レビュー対象外：
+
+以下はDB層ではなく、他の層でレビューすること：
+
+- **DTOファイル**（_.dto.ts、_.request.dto.ts、\*.response.dto.ts）→ Controller層で扱う
+- **CRUD処理の実装**（find、save、update、deleteメソッド等）→ Service層で扱う
+- **ビジネスロジック**（データの加工、計算、判定処理）→ Service層で扱う
+- **APIエンドポイントの定義** → Controller層で扱う
