@@ -24,48 +24,27 @@
 - **ストア設計の適切性**: 既存パターンに従い、state/actions/gettersが適切に設計されているか
 - **エラーハンドリング**: すべてのaxiosリクエストに適切な`catch`処理が実装されているか
 
-### ストア実装パターン：
+### ストア実装パターン
 
-#### 1. stateの定義
+#### stateの定義
 
-```typescript
-type State = {
-  games: Game[]
-  games_stats: PaginationStats | null
-  currentGame: Game | null
-}
-```
+- エンティティのコレクションとページネーション情報を分離して定義する
+- 単一エンティティ用の状態は `current{Entity}` の命名規則に従う
+- null許容型は適切に使用する（初期状態やデータ未取得時を表現）
 
-#### 2. actionsの実装パターン
+#### actionsの実装
 
-```typescript
-// 同期メソッド（UIロジックで必要でない場合）
-getGames(query: GetGamesQuery = { page: 1, limit: 20 }) {
-  axiosHotelLovers.get<GameResponseDto>('/games', { params: query })
-    .then((response) => {
-      this.games = response.data.items
-      this.games_stats = response.data.meta
-    })
-    .catch((error) => {
-      console.error('Failed to fetch games:', error)
-    })
-}
+**同期メソッド（UIロジックで必要でない場合）**
 
-// Promiseを返すパターン（UIロジックで必要な場合）
-updateGame(payload: UpdateGamePayload) {
-  return new Promise<Game>((resolve, reject) => {
-    axiosHotelLovers.put(`/games/${payload.id}`, payload)
-      .then((res) => {
-        // state更新
-        resolve(res.data)
-      })
-      .catch((error) => {
-        console.error('Failed to update game:', error)
-        reject(error)
-      })
-  })
-}
-```
+- axios呼び出しの結果を直接stateに反映する
+- `then`でレスポンスデータをstateに格納する
+- `catch`で適切なエラーログを出力する
+
+**Promiseを返すパターン（UIロジックで必要な場合）**
+
+- UIでローディング状態やエラーハンドリングが必要な場合に使用する
+- `resolve`でレスポンスデータを返す
+- `catch`でエラーログを出力し、`reject`で呼び出し元にエラーを伝播する
 
 ### パフォーマンス考慮点：
 
@@ -82,40 +61,21 @@ updateGame(payload: UpdateGamePayload) {
 
 #### Emit 定義
 
-```typescript
-// ❌ 悪い例: 型安全でない
-emit('append-input', message)
-
-// ✅ 良い例: defineEmits で型定義
-const emit = defineEmits<{
-  'append-input': [message: string]
-}>()
-```
+- `defineEmits`でTypeScript型定義を使用する
+- イベント名と引数の型を明示的に定義する
+- ランタイムのみの定義は避け、型安全性を確保する
 
 #### Props 定義
 
-```typescript
-// ❌ 悪い例: runtime のみの型定義
-defineProps({
-  items: Array
-})
-
-// ✅ 良い例: TypeScript 型定義
-defineProps<{
-  items: NextAction[]
-}>()
-```
+- `defineProps`でTypeScript型定義を使用する
+- ランタイムのみの型定義（`Array`, `Object`など）は避ける
+- 具体的な型（`NextAction[]`など）を指定する
 
 #### Computed/Reactive の型推論
 
-- computed の返り値型は明示的に指定しない（型推論に任せる）
-- ref/reactive の型は初期値から推論できる場合は省略可能
-
-```typescript
-// ✅ 良い例
-const count = ref(0) // number と推論される
-const items = ref<NextAction[]>([]) // 空配列の場合は型指定必要
-```
+- computedの返り値型は明示的に指定しない（型推論に任せる）
+- ref/reactiveの型は初期値から推論できる場合は省略可能
+- 空配列や空オブジェクトの場合は明示的な型指定が必要
 
 ### レビューコメントの判断基準
 
