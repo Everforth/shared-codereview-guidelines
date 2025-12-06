@@ -74,4 +74,4 @@ jobs:
           # Optional: Custom environment variables for Claude
           # claude_env: |
           #   NODE_ENV: test
-          max_turns: "30"
+          max_turns: "100"
