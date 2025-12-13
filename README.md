@@ -6,7 +6,7 @@
 
 1. Claude API Key を Secrets に設定する
    - API キーを取得して `ANTHROPIC_API_KEY` を手動で設定するか、ローカル Claude Code 上で `/github` を実行してください（ `/github` を使用する場合、2 では上書き保存してください）
-2. `claude.yml` を `.github/workflows/` に配置する
+2. `shared-claude-caller.yml` を `.github/workflows/` に配置する
 
 ## 使い方
 
