@@ -10,6 +10,7 @@
   - 基本NOT NULLとし、`nullable: false`の明示はしない
   - 値なしに意味がある場合のみnullableにし、optional markもつける
   - 区別不要なら`default: ''`を使用する
+  - リレーションの両側で異なるnullable設定は正当な設計である
 - 型設計: 既存型定義を再利用しているか
 - DB操作: TypeORMクエリが最適化され、N+1問題を避けているか
 - Enum定義: Enumを Entity内に書かず、types/ディレクトリ内ファイルに分離する
