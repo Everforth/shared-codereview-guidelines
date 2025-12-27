@@ -10,7 +10,10 @@
   - 基本NOT NULLとし、`nullable: false`の明示はしない
   - 値なしに意味がある場合のみnullableにし、optional markもつける
   - 区別不要なら`default: ''`を使用する
-  - リレーションの両側で異なるnullable設定は正当な設計である
+- リレーションのnullable設計:
+  - 両側で異なるnullable設定は正当であり、整合性の問題として指摘しないこと
+  - 親エンティティ側では子が存在しない場合があればnullableとする
+  - 子エンティティ側では親への参照は通常必須となる
 - 型設計: 既存型定義を再利用しているか
 - DB操作: TypeORMクエリが最適化され、N+1問題を避けているか
 - Enum定義: Enumを Entity内に書かず、types/ディレクトリ内ファイルに分離する
@@ -35,7 +38,13 @@
 
 以下はDB層ではなく、他の層でレビューすること：
 
-- **DTOファイル**（_.dto.ts、_.request.dto.ts、\*.response.dto.ts）→ Controller層で扱う
-- **CRUD処理の実装**（find、save、update、deleteメソッド等）→ Service層で扱う
-- **ビジネスロジック**（データの加工、計算、判定処理）→ Service層で扱う
-- **APIエンドポイントの定義** → Controller層で扱う
+- DTOファイル → Controller層で扱う
+- CRUD処理の実装 → Service層で扱う
+- ビジネスロジック → Service層で扱う
+- APIエンドポイントの定義 → Controller層で扱う
+
+### 指摘対象外（正当な設計パターン）：
+
+以下は正当な設計パターンであり、問題として指摘しないこと：
+
+- リレーションの両側で異なるnullable設定
