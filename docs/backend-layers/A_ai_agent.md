@@ -1,5 +1,7 @@
 ## AI Agent層（Agentの実装、ツール定義、型定義 等）
 
+実装パターンからの逸脱はNGとする。
+
 ### 必須チェック項目：
 
 - **型定義パターンの遵守**: Tool入力用スキーマと内部保存用の型を適切に分離しているか
@@ -170,7 +172,7 @@ export type ChatMessageAdditionalData = ChatMessageAdditionalDataInput & {
 #### 3.2 何をadditionalDataに焼くか
 
 | データ                   | 焼く | 理由                            |
-|--------------------------|------|---------------------------------|
+| ------------------------ | ---- | ------------------------------- |
 | savedOrderRequestId      | OK   | UI表示・次ターンのcontext注入   |
 | referencedOrderRequestId | OK   | UI表示・次ターンのcontext注入   |
 | outputReport             | OK   | UI表示（サマリーカード）        |
