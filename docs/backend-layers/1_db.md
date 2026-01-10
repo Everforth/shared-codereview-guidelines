@@ -17,7 +17,7 @@
   - 外部キーカラムがnullable: falseで、リレーション側がnullable: trueでも問題ない
 - 型設計: 既存型定義を再利用しているか
 - DB操作: TypeORMクエリが最適化され、N+1問題を避けているか
-- Enum定義: Enumを Entity内に書かず、types/ディレクトリ内ファイルに分離する
+- Enum定義: Enumを Entity内に書かず、types/ディレクトリ内ファイルに分離する（ @shared-codereview-guidelines/docs/backend-layers/B_Enum定義.md を参照）
 - デフォルト値: カラムに適切なdefault値を設定し、マジックナンバーではなく定義済み定数を使用する
 - 外部キー定義: リレーションを定義する場合、対応する外部キーカラムも明示的に定義する
 - Entityのコンストラクタ: 外部キーを持つEntityは、コンストラクタで必要な引数を受け取れるようにする
