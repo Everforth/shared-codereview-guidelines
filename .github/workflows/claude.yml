@@ -9,7 +9,7 @@ on:
 jobs:
   claude:
     runs-on: blacksmith-4vcpu-ubuntu-2404
-    timeout-minutes: 10
+    timeout-minutes: 35  # 10分 × 最大3回 + 余裕
     permissions:
       contents: write
       pull-requests: write
@@ -27,21 +27,18 @@ jobs:
           git clone --depth 1 https://github.com/Everforth/shared-codereview-guidelines.git
           echo "Guidelines repository cloned successfully"
 
-      - name: Run Claude Code
-        id: claude
+      # Claude Code 実行 (最大3回リトライ)
+      - name: Run Claude Code (attempt 1)
+        id: claude1
+        continue-on-error: true
+        timeout-minutes: 10
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-          # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
             actions: read
-
-          # Optional: Allow Claude to run specific commands
           allowed_tools: "Bash(npm install),Bash(npm run *)"
-
-          # Optional: Add custom instructions for Claude to customize its behavior for your project
           custom_instructions: |
             以下のガイドラインを重視して回答してください：
             - 考慮不足や潜在的な問題
@@ -62,8 +59,71 @@ jobs:
 
             ultrathink してください。
             常に日本語で返信してください。
+          max_turns: "100"
 
-          # Optional: Custom environment variables for Claude
-          # claude_env: |
-          #   NODE_ENV: test
+      - name: Run Claude Code (attempt 2)
+        id: claude2
+        if: steps.claude1.outcome == 'failure'
+        continue-on-error: true
+        timeout-minutes: 10
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          additional_permissions: |
+            actions: read
+          allowed_tools: "Bash(npm install),Bash(npm run *)"
+          custom_instructions: |
+            以下のガイドラインを重視して回答してください：
+            - 考慮不足や潜在的な問題
+            - バグやエラーの可能性
+            - セキュリティ上の懸念
+            - パフォーマンス上の問題
+            - 明らかに改善できる部分
+
+            リポジトリの技術スタックに応じた専用ガイドラインを参照してください：
+            - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
+            - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+
+            具体的な依頼がない場合、コードレビューを行ってください。
+            コードレビューを行う際は、問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
+            良い点の言及・総評は不要です。
+            PR の説明文 や リンクされた issue にも目を通し、背景や目的を理解した上でレビューを行ってください。
+            意図が不明な場合は質問してください。
+
+            ultrathink してください。
+            常に日本語で返信してください。
+          max_turns: "100"
+
+      - name: Run Claude Code (attempt 3)
+        id: claude3
+        if: steps.claude2.outcome == 'failure'
+        timeout-minutes: 10
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          additional_permissions: |
+            actions: read
+          allowed_tools: "Bash(npm install),Bash(npm run *)"
+          custom_instructions: |
+            以下のガイドラインを重視して回答してください：
+            - 考慮不足や潜在的な問題
+            - バグやエラーの可能性
+            - セキュリティ上の懸念
+            - パフォーマンス上の問題
+            - 明らかに改善できる部分
+
+            リポジトリの技術スタックに応じた専用ガイドラインを参照してください：
+            - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
+            - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+
+            具体的な依頼がない場合、コードレビューを行ってください。
+            コードレビューを行う際は、問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
+            良い点の言及・総評は不要です。
+            PR の説明文 や リンクされた issue にも目を通し、背景や目的を理解した上でレビューを行ってください。
+            意図が不明な場合は質問してください。
+
+            ultrathink してください。
+            常に日本語で返信してください。
           max_turns: "100"
