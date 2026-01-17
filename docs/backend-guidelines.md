@@ -79,10 +79,19 @@ STEP 1で決定した層に対応するガイドラインを確認してくだ�
 該当する1つのガイドラインのみ参照し、他の層のガイドラインは開かないでください。
 
 - AI Agent層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/A_ai_agent.md
+  - 実装パターンからの逸脱は修正必須とする
 - DB層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/1_db.md
 - Controller層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/2_controller.md
 - Service層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/3_service.md
 - その他を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/4_other.md
+- Enum関連の変更がある場合: @shared-codereview-guidelines/docs/backend-layers/B_Enum定義.md も併せて確認
+  - 二層定義パターンに従っているか（Db型と現役仕様型の分離）
+  - DTOやService層で現役仕様型を使用しているか
+  - Entity定義でDb型を使用しているか
+  - enumNameが明示的に指定されているか
+  - migrationが手書きで、適切なALTER TYPE文を使用しているか
+  - deprecated値にコメントが付いているか
+  - TypeORMの自動生成migrationでenumが変更されていないか
 
 ### STEP 3: 1層のみレビュー実施
 
@@ -183,19 +192,3 @@ STEP 1で決定した1つの層のみをレビューしてください。
 - PRの説明文やIssueの内容と実装に違和感がある場合、意図を確認するためにユーザーに質問すること
 - 命名規則に関する指摘は、同種の既存ファイルを確認してから行う
 - PRスコープ: 関係のないファイルへの変更が混入していないか確認する
-
-#### AI Agent層
-
-- 実装パターンからの逸脱は修正必須とする
-
-#### Enum関連の変更
-
-Enum関連の変更がある場合、以下を確認すること：
-
-- 二層定義パターンに従っているか（Db型と現役仕様型の分離）
-- DTOやService層で現役仕様型を使用しているか
-- Entity定義でDb型を使用しているか
-- enumNameが明示的に指定されているか
-- migrationが手書きで、適切なALTER TYPE文を使用しているか
-- deprecated値にコメントが付いているか
-- TypeORMの自動生成migrationでenumが変更されていないか
