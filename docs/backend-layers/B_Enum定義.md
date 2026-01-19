@@ -24,7 +24,7 @@
 
 ```typescript
 // ============================================
-// DB全集合（legacy含む）
+// 全集合（legacy含む）
 // ============================================
 export const ConversationAgentDb = {
   salesAgent: 'salesAgent',
@@ -40,7 +40,6 @@ export type ConversationAgentDb =
 
 // ============================================
 // 現役仕様（新規に使ってよい集合）
-// → app側のコードやDTOにはこちらを使う
 // ============================================
 export const ConversationAgent = {
   salesAgent: ConversationAgentDb.salesAgent,
