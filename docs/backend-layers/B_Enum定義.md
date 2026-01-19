@@ -17,7 +17,7 @@
 
 #### ルール
 
-- **DB全集合（legacy含む）** と **現役仕様** を分けて定義する
+- **全集合（legacy含む）** と **現役仕様** を分けて定義する
 - アプリの業務ロジック・DTOは **現役仕様のみ** を使う
 
 #### 実装例
@@ -26,7 +26,7 @@
 // ============================================
 // 全集合（legacy含む）
 // ============================================
-export const ConversationAgentDb = {
+export const ConversationAgentAll = {
   salesAgent: 'salesAgent',
   orderEntryWorkflow: 'orderEntryWorkflow',
   analyzeAgent: 'analyzeAgent',
@@ -35,17 +35,17 @@ export const ConversationAgentDb = {
   legacyAgent: 'legacyAgent',
 } as const;
 
-export type ConversationAgentDb =
-  typeof ConversationAgentDb[keyof typeof ConversationAgentDb];
+export type ConversationAgentAll =
+  typeof ConversationAgentAll[keyof typeof ConversationAgentAll];
 
 // ============================================
 // 現役仕様（新規に使ってよい集合）
 // ============================================
 export const ConversationAgent = {
-  salesAgent: ConversationAgentDb.salesAgent,
-  orderEntryWorkflow: ConversationAgentDb.orderEntryWorkflow,
-  analyzeAgent: ConversationAgentDb.analyzeAgent,
-  marketAgent: ConversationAgentDb.marketAgent,
+  salesAgent: ConversationAgentAll.salesAgent,
+  orderEntryWorkflow: ConversationAgentAll.orderEntryWorkflow,
+  analyzeAgent: ConversationAgentAll.analyzeAgent,
+  marketAgent: ConversationAgentAll.marketAgent,
 } as const;
 
 export type ConversationAgent =
@@ -56,10 +56,10 @@ export type ConversationAgent =
 
 | 用途                        | 使用する型                      |
 | --------------------------- | ------------------------------- |
-| Entity定義（DBカラムの型）  | `ConversationAgentDb`           |
+| Entity定義（DBカラムの型）  | `ConversationAgentAll`           |
 | DTO・バリデーション         | `ConversationAgent`（現役仕様） |
 | Service層のビジネスロジック | `ConversationAgent`（現役仕様） |
-| DBからの読み取り結果の型    | `ConversationAgentDb`           |
+| DBからの読み取り結果の型    | `ConversationAgentAll`           |
 
 ---
 
@@ -104,10 +104,10 @@ CREATE TYPE order_status AS ENUM ('draft', 'submitted', 'confirmed', 'cancelled'
 export class Conversation {
   @Column({
     type: 'enum',
-    enum: ConversationAgentDb,
+    enum: ConversationAgentAll,
     enumName: 'conversation_agent',  // ← 必ず固定名を指定
   })
-  agent: ConversationAgentDb;
+  agent: ConversationAgentAll;
 }
 ```
 
