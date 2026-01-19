@@ -69,7 +69,6 @@ export type ConversationAgent =
 
 - **enumの追加・リネームは手書きmigration**で行う
 - **TypeORMの自動migrationでenumを変更しない**
-- **enumNameは必ず固定**する（Entity側で明示的に指定）
 - **deprecated値はDB enumに残したまま運用**する
 
 #### 手書きMigrationの書き方
