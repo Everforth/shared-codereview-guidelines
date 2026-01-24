@@ -40,18 +40,28 @@ jobs:
             actions: read
           allowed_tools: "Bash(npm install),Bash(npm run *)"
           custom_instructions: |
-            以下のガイドラインを重視して回答してください：
+            【最初に必ず実施】依頼内容のタイプを判定してください：
+
+            A. 設計相談・方針検討
+            - 設計パターンの比較（例：「〜と〜どちらが良いか」）
+            - アーキテクチャ選択の相談
+            - 実装方針への意見・フィードバックを求める依頼
+            - 「〜が気になる」「〜は問題か」などの質問
+            → @shared-codereview-guidelines/docs/design-consultation.md を参照して対応
+
+            B. コードレビュー（上記に該当しない場合）
+            - 無言での呼び出し、「レビューしてください」など一般的なレビュー依頼
+            → 技術スタックに応じたガイドラインを必ず最初に読んでから進む（スキップ禁止）
+              - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
+              - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+
+            【コードレビュー時の観点】
             - 考慮不足や潜在的な問題
             - バグやエラーの可能性
             - セキュリティ上の懸念
             - パフォーマンス上の問題
             - 明らかに改善できる部分
 
-            リポジトリの技術スタックに応じた専用ガイドラインを参照してください：
-            - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
-            - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
-
-            具体的な依頼がない場合、コードレビューを行ってください。
             コードレビューを行う際は、問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
             良い点の言及・総評は不要です。
             PR の説明文 や リンクされた issue にも目を通し、背景や目的を理解した上でレビューを行ってください。
@@ -74,18 +84,28 @@ jobs:
             actions: read
           allowed_tools: "Bash(npm install),Bash(npm run *)"
           custom_instructions: |
-            以下のガイドラインを重視して回答してください：
+            【最初に必ず実施】依頼内容のタイプを判定してください：
+
+            A. 設計相談・方針検討
+            - 設計パターンの比較（例：「〜と〜どちらが良いか」）
+            - アーキテクチャ選択の相談
+            - 実装方針への意見・フィードバックを求める依頼
+            - 「〜が気になる」「〜は問題か」などの質問
+            → @shared-codereview-guidelines/docs/design-consultation.md を参照して対応
+
+            B. コードレビュー（上記に該当しない場合）
+            - 無言での呼び出し、「レビューしてください」など一般的なレビュー依頼
+            → 技術スタックに応じたガイドラインを必ず最初に読んでから進む（スキップ禁止）
+              - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
+              - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+
+            【コードレビュー時の観点】
             - 考慮不足や潜在的な問題
             - バグやエラーの可能性
             - セキュリティ上の懸念
             - パフォーマンス上の問題
             - 明らかに改善できる部分
 
-            リポジトリの技術スタックに応じた専用ガイドラインを参照してください：
-            - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
-            - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
-
-            具体的な依頼がない場合、コードレビューを行ってください。
             コードレビューを行う際は、問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
             良い点の言及・総評は不要です。
             PR の説明文 や リンクされた issue にも目を通し、背景や目的を理解した上でレビューを行ってください。
@@ -107,18 +127,28 @@ jobs:
             actions: read
           allowed_tools: "Bash(npm install),Bash(npm run *)"
           custom_instructions: |
-            以下のガイドラインを重視して回答してください：
+            【最初に必ず実施】依頼内容のタイプを判定してください：
+
+            A. 設計相談・方針検討
+            - 設計パターンの比較（例：「〜と〜どちらが良いか」）
+            - アーキテクチャ選択の相談
+            - 実装方針への意見・フィードバックを求める依頼
+            - 「〜が気になる」「〜は問題か」などの質問
+            → @shared-codereview-guidelines/docs/design-consultation.md を参照して対応
+
+            B. コードレビュー（上記に該当しない場合）
+            - 無言での呼び出し、「レビューしてください」など一般的なレビュー依頼
+            → 技術スタックに応じたガイドラインを必ず最初に読んでから進む（スキップ禁止）
+              - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
+              - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+
+            【コードレビュー時の観点】
             - 考慮不足や潜在的な問題
             - バグやエラーの可能性
             - セキュリティ上の懸念
             - パフォーマンス上の問題
             - 明らかに改善できる部分
 
-            リポジトリの技術スタックに応じた専用ガイドラインを参照してください：
-            - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
-            - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
-
-            具体的な依頼がない場合、コードレビューを行ってください。
             コードレビューを行う際は、問題がある部分のみを簡潔に指摘し、建設的な改善提案を行ってください。
             良い点の言及・総評は不要です。
             PR の説明文 や リンクされた issue にも目を通し、背景や目的を理解した上でレビューを行ってください。
