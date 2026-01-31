@@ -9,7 +9,7 @@ on:
 jobs:
   claude:
     runs-on: blacksmith-4vcpu-ubuntu-2404
-    timeout-minutes: 35  # 10分 × 最大3回 + 余裕
+    timeout-minutes: 95  # 30分 × 最大3回 + 余裕
     permissions:
       contents: write
       pull-requests: write
@@ -31,7 +31,7 @@ jobs:
       - name: Run Claude Code (attempt 1)
         id: claude1
         continue-on-error: true
-        timeout-minutes: 10
+        timeout-minutes: 30
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -72,7 +72,7 @@ jobs:
         id: claude2
         if: steps.claude1.outcome == 'failure'
         continue-on-error: true
-        timeout-minutes: 10
+        timeout-minutes: 30
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -112,7 +112,7 @@ jobs:
       - name: Run Claude Code (attempt 3)
         id: claude3
         if: steps.claude2.outcome == 'failure'
-        timeout-minutes: 10
+        timeout-minutes: 30
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
