@@ -38,7 +38,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           additional_permissions: |
             actions: read
-          allowed_tools: "Bash(npm install),Bash(npm run *)"
+          allowed_tools: "Bash(git log:*),Bash(npm install),Bash(npm run *)"
           custom_instructions: |
             【最初に必ず実施】依頼内容のタイプを判定してください：
 
@@ -79,7 +79,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           additional_permissions: |
             actions: read
-          allowed_tools: "Bash(npm install),Bash(npm run *)"
+          allowed_tools: "Bash(git log:*),Bash(npm install),Bash(npm run *)"
           custom_instructions: |
             【最初に必ず実施】依頼内容のタイプを判定してください：
 
@@ -119,7 +119,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           additional_permissions: |
             actions: read
-          allowed_tools: "Bash(npm install),Bash(npm run *)"
+          allowed_tools: "Bash(git log:*),Bash(npm install),Bash(npm run *)"
           custom_instructions: |
             【最初に必ず実施】依頼内容のタイプを判定してください：
 
