@@ -106,6 +106,7 @@ export class Conversation {
     type: 'enum',
     enum: ConversationAgentAll,
     enumName: 'conversation_agent',  // ← 必ず固定名を指定
+    default: ConversationAgentAll.salesAgent
   })
   agent: ConversationAgentAll;
 }
