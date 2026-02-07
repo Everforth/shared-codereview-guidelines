@@ -48,9 +48,10 @@ jobs:
 
             B. コードレビュー（上記に該当しない場合）
             - 無言での呼び出し、「レビューしてください」など一般的なレビュー依頼
-            → 技術スタックに応じたガイドラインを必ず最初に読んでから進む（スキップ禁止）
-              - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
-              - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+            → 技術スタックに応じたガイドラインをReadツールで必ず読み込んでから進む（スキップ禁止）
+              - フロントエンド: shared-codereview-guidelines/docs/frontend-guidelines.md をReadツールで読む
+              - バックエンド: shared-codereview-guidelines/docs/backend-guidelines.md をReadツールで読む
+              - ガイドライン内のSTEP手順に従い、各層のガイドラインもReadツールで読むこと
 
             【コードレビュー時の観点】
             - 考慮不足や潜在的な問題
@@ -94,9 +95,10 @@ jobs:
 
             B. コードレビュー（上記に該当しない場合）
             - 無言での呼び出し、「レビューしてください」など一般的なレビュー依頼
-            → 技術スタックに応じたガイドラインを必ず最初に読んでから進む（スキップ禁止）
-              - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
-              - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+            → 技術スタックに応じたガイドラインをReadツールで必ず読み込んでから進む（スキップ禁止）
+              - フロントエンド: shared-codereview-guidelines/docs/frontend-guidelines.md をReadツールで読む
+              - バックエンド: shared-codereview-guidelines/docs/backend-guidelines.md をReadツールで読む
+              - ガイドライン内のSTEP手順に従い、各層のガイドラインもReadツールで読むこと
 
             【コードレビュー時の観点】
             - 考慮不足や潜在的な問題
@@ -139,9 +141,10 @@ jobs:
 
             B. コードレビュー（上記に該当しない場合）
             - 無言での呼び出し、「レビューしてください」など一般的なレビュー依頼
-            → 技術スタックに応じたガイドラインを必ず最初に読んでから進む（スキップ禁止）
-              - フロントエンド: @shared-codereview-guidelines/docs/frontend-guidelines.md
-              - バックエンド: @shared-codereview-guidelines/docs/backend-guidelines.md
+            → 技術スタックに応じたガイドラインをReadツールで必ず読み込んでから進む（スキップ禁止）
+              - フロントエンド: shared-codereview-guidelines/docs/frontend-guidelines.md をReadツールで読む
+              - バックエンド: shared-codereview-guidelines/docs/backend-guidelines.md をReadツールで読む
+              - ガイドライン内のSTEP手順に従い、各層のガイドラインもReadツールで読むこと
 
             【コードレビュー時の観点】
             - 考慮不足や潜在的な問題
