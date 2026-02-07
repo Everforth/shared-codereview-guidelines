@@ -48,3 +48,10 @@
 - CRUD処理の実装（Service層の責務）
 - ビジネスロジック（Service層の責務）
 - APIエンドポイントの定義（Controller層の責務）
+
+### PostgreSQL特有の注意点：
+
+- Decimal/Numeric型: JavaScriptのnumber精度を超えるため、ORMではStringとして返却される
+- BigInt/BigSerial型: `Number.MAX_SAFE_INTEGER`を超える値で精度損失。ORMではStringまたはBigInt型でマッピング
+- Array型: TypeORMでは`@Column('integer', { array: true })`で定義。`@Column('array')`はエラー
+- Boolean型: `WHERE column = NULL`ではなく`WHERE column IS NULL`を使用
