@@ -163,3 +163,29 @@ jobs:
             ultrathink してください。
             常に日本語で返信してください。
           max_turns: "100"
+
+      # 処理完了通知
+      - name: Notify completion
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            let caller = '';
+            if (context.eventName === 'issue_comment' || context.eventName === 'pull_request_review_comment') {
+              caller = context.payload.comment?.user?.login;
+            } else if (context.eventName === 'pull_request_review') {
+              caller = context.payload.review?.user?.login;
+            } else if (context.eventName === 'issues') {
+              caller = context.payload.sender?.login || context.payload.issue?.user?.login;
+            }
+            if (!caller) return;
+
+            const issueNumber = context.payload.issue?.number || context.payload.pull_request?.number;
+            if (!issueNumber) return;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: `@${caller} 完了しました`
+            });
