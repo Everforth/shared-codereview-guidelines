@@ -72,16 +72,16 @@
 
 【開始条件】STEP 1で次のレビュー対象層を決定済みであること
 
-STEP 1で決定した層に対応するガイドラインを確認してください。
-該当する1つのガイドラインのみ参照し、他の層のガイドラインは開かないでください。
+STEP 1で決定した層に対応するガイドラインをReadツールで読み込んでください。
+該当する1つのガイドラインのみ読み込み、他の層のガイドラインは読まないでください。
 
-- AI Agent層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/A_ai_agent.md
+- AI Agent層を特定した場合のみ: shared-codereview-guidelines/docs/backend-layers/A_ai_agent.md をReadツールで読む
   - 実装パターンからの逸脱は修正必須とする
-- DB層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/1_db.md
-- Controller層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/2_controller.md
-- Service層を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/3_service.md
-- その他を特定した場合のみ: @shared-codereview-guidelines/docs/backend-layers/4_other.md
-- Enum関連の変更がある場合: @shared-codereview-guidelines/docs/backend-layers/B_Enum定義.md も併せて確認
+- DB層を特定した場合のみ: shared-codereview-guidelines/docs/backend-layers/1_db.md をReadツールで読む
+- Controller層を特定した場合のみ: shared-codereview-guidelines/docs/backend-layers/2_controller.md をReadツールで読む
+- Service層を特定した場合のみ: shared-codereview-guidelines/docs/backend-layers/3_service.md をReadツールで読む
+- その他を特定した場合のみ: shared-codereview-guidelines/docs/backend-layers/4_other.md をReadツールで読む
+- Enum関連の変更がある場合: shared-codereview-guidelines/docs/backend-layers/B_Enum定義.md もReadツールで読む
   - 二層定義パターンに従っているか（Db型と現役仕様型の分離）
   - DTOやService層で現役仕様型を使用しているか
   - Entity定義でDb型を使用しているか
