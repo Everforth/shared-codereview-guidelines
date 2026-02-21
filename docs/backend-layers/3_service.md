@@ -45,7 +45,7 @@
 ### TypeORM使用方針：
 
 - QueryBuilderよりRepository APIを優先: QueryBuilderは型推論が効かないため、複雑なクエリが必要な場合を除きRepository APIを使用する
-- `repository.save()` や `entityManager.save()` の使用に注意: 内部的にN+1クエリを発行するため、ボリュームが多い箇所ではQueryBuilderを使用する
+- `repository.save()` や `entityManager.save()` が含まれる場合、「🟨 確認」として指摘する。内部的にN+1クエリを発行するため、ボリュームが多い場合はQueryBuilderの使用を検討すべきであることを伝える。
 - ページネーションライブラリの活用: パフォーマンス最適化が必須の箇所を除き、`nestjs-typeorm-paginate`等の標準ライブラリで保守性を確保する
 
 ### 設計規則：
