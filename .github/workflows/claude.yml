@@ -192,3 +192,44 @@ jobs:
               issue_number: issueNumber,
               body: `@${caller} 完了しました`
             });
+
+      # ラベル追加（Claude正常終了時、PR Titleに"CI Test"が含まれない場合）
+      - name: Add EF-guideline-called label
+        if: |
+          (steps.claude1.outcome == 'success' || steps.claude2.outcome == 'success' || steps.claude3.outcome == 'success') &&
+          !contains(github.event.pull_request.title, 'CI Test')
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) return;
+
+            const labelName = 'EF-guideline-called';
+            const labelColor = '0E8A16';
+
+            // ラベルが存在しなければ作成
+            try {
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: labelName,
+                color: labelColor,
+                description: 'Claude Code review was executed on this PR'
+              });
+              console.log(`Label '${labelName}' created`);
+            } catch (error) {
+              if (error.status === 422) {
+                console.log(`Label '${labelName}' already exists, skipping creation`);
+              } else {
+                throw error;
+              }
+            }
+
+            // PRにラベルを追加
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: [labelName]
+            });
+            console.log(`Label '${labelName}' added to PR #${prNumber}`);
