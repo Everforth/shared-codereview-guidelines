@@ -195,14 +195,19 @@ jobs:
 
       # ラベル追加（Claude正常終了時、PR Titleに"CI Test"が含まれない場合）
       - name: Add EF-guideline-called label
-        if: |
-          (steps.claude1.outcome == 'success' || steps.claude2.outcome == 'success' || steps.claude3.outcome == 'success') &&
-          !contains(github.event.pull_request.title, 'CI Test')
+        if: steps.claude1.outcome == 'success' || steps.claude2.outcome == 'success' || steps.claude3.outcome == 'success'
         uses: actions/github-script@v8
         with:
           script: |
-            const prNumber = context.payload.pull_request?.number;
+            const prNumber = context.payload.pull_request?.number || context.payload.issue?.number;
             if (!prNumber) return;
+
+            // PR Titleに"CI Test"が含まれる場合はスキップ
+            const prTitle = context.payload.pull_request?.title || context.payload.issue?.title || '';
+            if (prTitle.includes('CI Test')) {
+              console.log(`PR title contains 'CI Test', skipping label`);
+              return;
+            }
 
             const labelName = 'EF-guideline-called';
             const labelColor = '0E8A16';
