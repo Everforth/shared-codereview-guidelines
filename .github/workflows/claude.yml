@@ -199,13 +199,23 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
+            console.log('=== Add EF-guideline-called label ===');
+            console.log('eventName:', context.eventName);
+            console.log('payload.pull_request?.number:', context.payload.pull_request?.number);
+            console.log('payload.issue?.number:', context.payload.issue?.number);
+
             const prNumber = context.payload.pull_request?.number || context.payload.issue?.number;
-            if (!prNumber) return;
+            if (!prNumber) {
+              console.log('No PR number found, skipping');
+              return;
+            }
+            console.log('prNumber:', prNumber);
 
             // PR Titleに"CI Test"が含まれる場合はスキップ
             const prTitle = context.payload.pull_request?.title || context.payload.issue?.title || '';
+            console.log('prTitle:', prTitle);
             if (prTitle.includes('CI Test')) {
-              console.log(`PR title contains 'CI Test', skipping label`);
+              console.log('PR title contains "CI Test", skipping label');
               return;
             }
 
@@ -226,6 +236,7 @@ jobs:
               if (error.status === 422) {
                 console.log(`Label '${labelName}' already exists, skipping creation`);
               } else {
+                console.log('Error creating label:', error.message);
                 throw error;
               }
             }
