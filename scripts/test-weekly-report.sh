@@ -86,9 +86,9 @@ fi
 # Create prompt
 PROMPT="以下のPRについて、内容を確認し評価して。
 出力フォーマット(フォーマットは必ず守ること)
-- https://github.com/Everforth/pj-ring-api/pull/121 ズレたレビュー、ikutani さんからの指摘を受けて全層レビュー完了まで進んだ
+- https://github.com/Everforth/pj-ring-api/pull/121 ズレたレビュー、指摘を受けて全層レビュー完了まで進んだ
 - https://github.com/Everforth/wismettac-sales-ai-api/pull/282 正常系、一発通過
-- https://github.com/acetokyo-com/nextream-front/pull/4 正常系、ikutani さん以外が複数回呼び出しして進めてるの始めてみたかも
+- https://github.com/acetokyo-com/nextream-front/pull/4 正常系
 
 # 対象期間
 $CUTOFF_DATE 〜 $(date -u +%Y-%m-%d)
