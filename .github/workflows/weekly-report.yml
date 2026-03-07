@@ -75,9 +75,11 @@ jobs:
         if: steps.collect.outputs.skip_report == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DATE_RANGE: ${{ steps.collect.outputs.date_range }}
-          PR_COUNT: ${{ steps.collect.outputs.pr_count }}
         run: |
+          # Get data from previous step outputs
+          DATE_RANGE="${{ steps.collect.outputs.date_range }}"
+          PR_COUNT="${{ steps.collect.outputs.pr_count }}"
+
           # Create issue title
           ISSUE_TITLE="週次Claudeレビューレポート - ${DATE_RANGE}"
 
@@ -95,39 +97,39 @@ jobs:
           # Read original prompt
           PROMPT_CONTENT=$(cat prompt.txt)
 
-          # Create issue body
-          cat > issue-body.md <<EOF
-## 📊 週次Claudeレビューレポート
-
-### 対象期間
-${DATE_RANGE}
-
-### PR数
-合計 **${PR_COUNT}** 件のPRを分析しました。
-
----
-
-## Claude Code による評価
-
-${CLAUDE_RESPONSE}
-
----
-
-## 元データ
-
-<details>
-<summary>PR一覧（クリックして展開）</summary>
-
-\`\`\`
-${PROMPT_CONTENT}
-\`\`\`
-
-</details>
-
----
-
-🤖 このレポートは [weekly-report.yml](.github/workflows/weekly-report.yml) により自動生成されました。
-EOF
+          # Create issue body using printf for better control
+          {
+            echo "## 📊 週次Claudeレビューレポート"
+            echo ""
+            echo "### 対象期間"
+            echo "${DATE_RANGE}"
+            echo ""
+            echo "### PR数"
+            echo "合計 **${PR_COUNT}** 件のPRを分析しました。"
+            echo ""
+            echo "---"
+            echo ""
+            echo "## Claude Code による評価"
+            echo ""
+            echo "${CLAUDE_RESPONSE}"
+            echo ""
+            echo "---"
+            echo ""
+            echo "## 元データ"
+            echo ""
+            echo "<details>"
+            echo "<summary>PR一覧（クリックして展開）</summary>"
+            echo ""
+            echo '```'
+            cat prompt.txt
+            echo '```'
+            echo ""
+            echo "</details>"
+            echo ""
+            echo "---"
+            echo ""
+            echo "🤖 このレポートは [weekly-report.yml](.github/workflows/weekly-report.yml) により自動生成されました。"
+          } > issue-body.md
 
           # Create the issue
           gh issue create \
