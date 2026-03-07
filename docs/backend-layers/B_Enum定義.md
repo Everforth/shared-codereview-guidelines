@@ -56,10 +56,10 @@ export type ConversationAgent =
 
 | 用途                        | 使用する型                      |
 | --------------------------- | ------------------------------- |
-| Entity定義（DBカラムの型）  | `ConversationAgentAll`           |
+| Entity定義（DBカラムの型）  | `ConversationAgentAll`          |
 | DTO・バリデーション         | `ConversationAgent`（現役仕様） |
 | Service層のビジネスロジック | `ConversationAgent`（現役仕様） |
-| DBからの読み取り結果の型    | `ConversationAgentAll`           |
+| DBからの読み取り結果の型    | `ConversationAgentAll`          |
 
 ---
 

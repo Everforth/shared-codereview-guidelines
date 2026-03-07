@@ -5,6 +5,22 @@
 
 set -euo pipefail
 
+# Parse command line arguments
+OUTPUT_ONLY=false
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --output-only)
+      OUTPUT_ONLY=true
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      echo "Usage: $0 [--output-only]" >&2
+      exit 1
+      ;;
+  esac
+done
+
 # Configuration
 ORG="Everforth"
 DAYS_BACK=7
@@ -83,8 +99,8 @@ if [ -z "$pr_list" ]; then
   exit 0
 fi
 
-# Create prompt
-PROMPT="以下のPRについて、内容を確認し評価して。
+# Create prompt content
+PROMPT_CONTENT="以下のPRについて、内容を確認し評価して。
 出力フォーマット(フォーマットは必ず守ること)
 - https://github.com/Everforth/pj-ring-api/pull/121 ズレたレビュー、指摘を受けて全層レビュー完了まで進んだ
 - https://github.com/Everforth/wismettac-sales-ai-api/pull/282 正常系、一発通過
@@ -101,10 +117,15 @@ $pr_list
 2. 特筆すべき点やパターン
 3. レビューの質や内容に関する気づき"
 
-# Execute Claude Code
-echo "=== Executing Claude Code ===" >&2
-echo "" >&2
-claude "$PROMPT"
+if [ "$OUTPUT_ONLY" = true ]; then
+  # Output only mode: print prompt to stdout for GitHub Actions
+  echo "$PROMPT_CONTENT"
+else
+  # Interactive mode: execute Claude Code
+  echo "=== Executing Claude Code ===" >&2
+  echo "" >&2
+  claude -p "$PROMPT_CONTENT"
+fi
 
 # Cleanup
 rm -rf "$TEMP_DIR"

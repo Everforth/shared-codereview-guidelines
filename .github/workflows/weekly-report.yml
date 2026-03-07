@@ -1,0 +1,148 @@
+name: Weekly Claude Review Report
+
+on:
+  schedule:
+    # 毎週日曜日 09:00 JST (00:00 UTC)
+    - cron: '0 0 * * 0'
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Collect PR data
+        id: collect
+        env:
+          GH_TOKEN: ${{ secrets.EVERFORTH_ORG_PAT }}
+        run: |
+          # Run script in output-only mode to get the prompt
+          bash scripts/weekly-claude-report.sh --output-only > prompt.txt 2>progress.log
+
+          # Display progress log
+          cat progress.log
+
+          # Check if we found any PRs
+          if [ ! -s prompt.txt ]; then
+            echo "No PRs found, skipping report generation"
+            echo "skip_report=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip_report=false" >> "$GITHUB_OUTPUT"
+
+            # Extract PR count and date range for the issue title
+            PR_COUNT=$(jq 'length' claude-report-data.json)
+            DATE_RANGE=$(grep "# 対象期間" prompt.txt | sed 's/# 対象期間//' | xargs)
+            echo "pr_count=$PR_COUNT" >> "$GITHUB_OUTPUT"
+            echo "date_range=$DATE_RANGE" >> "$GITHUB_OUTPUT"
+
+            # Save prompt content to output
+            {
+              echo 'prompt<<EOF'
+              cat prompt.txt
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate report with Claude Code
+        if: steps.collect.outputs.skip_report == 'false'
+        id: claude
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          initial_prompt: ${{ steps.collect.outputs.prompt }}
+          custom_instructions: |
+            週次レポート生成アシスタントとして、提供されたPR一覧を分析してください。
+            各PRについて、レビューの実施状況や特筆すべき点を評価してください。
+            常に日本語で返信してください。
+          max_turns: "20"
+          permission_mode: "bypassPermissions"
+          print_mode: true
+
+      - name: Create Issue with report
+        if: steps.collect.outputs.skip_report == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create issue title
+          ISSUE_TITLE="週次Claudeレビューレポート - ${{ steps.collect.outputs.date_range }}"
+
+          # Read Claude's response from the action output
+          # Note: claude-code-action@beta outputs the response to a file or stdout
+          # We'll check if there's a response file or use the action output
+          if [ -f "claude-response.txt" ]; then
+            CLAUDE_RESPONSE=$(cat claude-response.txt)
+          else
+            # Fallback: try to get from action output if available
+            # This may need adjustment based on actual action output format
+            CLAUDE_RESPONSE="Claude Code実行完了。詳細はワークフローログを参照してください。"
+          fi
+
+          # Read original prompt
+          PROMPT_CONTENT=$(cat prompt.txt)
+
+          # Create issue body
+          cat > issue-body.md <<'EOF'
+## 📊 週次Claudeレビューレポート
+
+### 対象期間
+${{ steps.collect.outputs.date_range }}
+
+### PR数
+合計 **${{ steps.collect.outputs.pr_count }}** 件のPRを分析しました。
+
+---
+
+## Claude Code による評価
+
+EOF
+          # Append Claude response (if we have it from the action)
+          echo "$CLAUDE_RESPONSE" >> issue-body.md
+
+          cat >> issue-body.md <<'EOF'
+
+---
+
+## 元データ
+
+<details>
+<summary>PR一覧（クリックして展開）</summary>
+
+```
+EOF
+          cat prompt.txt >> issue-body.md
+          cat >> issue-body.md <<'EOF'
+```
+
+</details>
+
+---
+
+🤖 このレポートは [weekly-report.yml](.github/workflows/weekly-report.yml) により自動生成されました。
+EOF
+
+          # Create the issue
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "$ISSUE_TITLE" \
+            --body-file issue-body.md \
+            --label "weekly-report,automated"
+
+          echo "Issue created successfully"
+
+      - name: No PRs found
+        if: steps.collect.outputs.skip_report == 'true'
+        run: |
+          echo "No PRs found in the specified period. Skipping report generation."

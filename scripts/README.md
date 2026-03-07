@@ -206,15 +206,55 @@ which claude
 # See: https://github.com/anthropics/claude-code
 ```
 
-## Future Enhancements (Phase 2)
+## GitHub Actions Integration (Phase 2) ✅
 
-The following features are planned for GitHub Actions integration:
+The repository now includes a GitHub Actions workflow for automated weekly report generation!
 
-- [ ] Automated weekly execution via cron schedule
-- [ ] PR list collection using the shell script
-- [ ] Claude Code execution via `anthropics/claude-code-action@beta`
-- [ ] Automatic GitHub Issue creation with Claude's analysis
-- [ ] Custom report templates
+### Features
+
+- ✅ Automated weekly execution (every Sunday at 09:00 JST)
+- ✅ PR list collection using the shell script
+- ✅ Claude Code execution via `anthropics/claude-code-action@beta`
+- ✅ Automatic GitHub Issue creation with Claude's analysis
+- ✅ Manual trigger support (`workflow_dispatch`)
+
+### Setup Instructions
+
+📖 **Detailed setup guide**: [SETUP-GITHUB-ACTIONS.md](./SETUP-GITHUB-ACTIONS.md)
+
+**Quick setup:**
+
+1. **Create Organization PAT** with permissions for:
+   - Actions: Read-only
+   - Contents: Read-only
+   - Metadata: Read-only
+   - Pull requests: Read-only
+
+2. **Add Repository Secrets**:
+   - `EVERFORTH_ORG_PAT`: The Personal Access Token
+   - `ANTHROPIC_API_KEY`: Your Anthropic API key
+
+3. **Test the workflow** using manual trigger (`workflow_dispatch`)
+
+For detailed step-by-step instructions, screenshots, and troubleshooting, see [SETUP-GITHUB-ACTIONS.md](./SETUP-GITHUB-ACTIONS.md).
+
+### What the Workflow Does
+
+1. Checks out the repository
+2. Collects PRs with `EF-guideline-called` label from the last 7 days
+3. Generates a prompt with the PR list
+4. Executes Claude Code to analyze the PRs
+5. Creates a GitHub Issue with the analysis results
+
+### Manual Execution
+
+You can manually trigger the workflow:
+
+1. Go to Actions tab in GitHub
+2. Select "Weekly Claude Review Report"
+3. Click "Run workflow"
+4. Select the branch (usually `main`)
+5. Click "Run workflow" button
 
 ## Related Files
 

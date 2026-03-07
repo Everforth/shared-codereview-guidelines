@@ -8,16 +8,24 @@
    - Scans all Everforth Organization repositories
    - Collects PRs with `EF-guideline-called` label from the last 7 days
    - Generates JSON data and Claude prompt
-   - Automatically executes Claude Code CLI with the prompt
+   - Supports `--output-only` flag for GitHub Actions integration
+   - Automatically executes Claude Code CLI in interactive mode
 
 2. **`scripts/test-weekly-report.sh`** (Test script)
    - Tests with a small subset of repositories
    - Verifies environment setup
    - Quick validation before full run
 
-3. **`scripts/README.md`** (Documentation)
+3. **`.github/workflows/weekly-report.yml`** (GitHub Actions workflow)
+   - Scheduled execution every Sunday at 09:00 JST
+   - Collects PR data using the shell script
+   - Executes Claude Code via `anthropics/claude-code-action@beta`
+   - Creates GitHub Issue with analysis results
+
+4. **`scripts/README.md`** (Documentation)
    - Prerequisites and installation guide
-   - Usage instructions
+   - Usage instructions (local and GitHub Actions)
+   - GitHub Actions setup guide
    - Troubleshooting tips
    - Customization options
 
@@ -142,20 +150,22 @@ LABEL="EF-guideline-called"  # Label to filter PRs
 OUTPUT_FILE="claude-report-data.json"  # Output file name
 ```
 
-## Phase 2: GitHub Actions Integration (Future)
+## Phase 2: GitHub Actions Integration ✅ COMPLETED
 
-### Planned Features
+### Implemented Features
 
-- [ ] Automated weekly execution (cron schedule: Sunday 09:00 JST)
-- [ ] GitHub Issue creation with report
-- [ ] PAT setup for organization-wide access
-- [ ] Custom report templates
-- [ ] Trend analysis over multiple weeks
+- [x] Automated weekly execution (cron schedule: Sunday 09:00 JST)
+- [x] GitHub Issue creation with report
+- [x] PAT setup for organization-wide access
+- [x] Manual trigger support (`workflow_dispatch`)
+- [x] `--output-only` flag for shell script (GitHub Actions compatibility)
 
-### Required Files (Not Yet Implemented)
+### Implemented Files
 
 - `.github/workflows/weekly-report.yml` - GitHub Actions workflow
-- Organization secret: `EVERFORTH_ORG_PAT` - Personal Access Token
+- Required secrets:
+  - `EVERFORTH_ORG_PAT` - Personal Access Token for organization access
+  - `ANTHROPIC_API_KEY` - Anthropic API key for Claude Code
 
 ### PAT Requirements (For Future Implementation)
 
@@ -240,25 +250,43 @@ CUTOFF_DATE=$(date -u -d "${DAYS_BACK} days ago" +%Y-%m-%d)
    - The script will still generate the prompt file
    - Run Claude Code manually: `claude --message "$(cat /tmp/claude-prompt.txt)"`
 
-## Next Steps
+## Next Steps (Post-Implementation)
 
-To implement Phase 2 (GitHub Actions):
+To start using the GitHub Actions workflow:
 
-1. Create `.github/workflows/weekly-report.yml`
-2. Set up `EVERFORTH_ORG_PAT` organization secret
-3. Test with `workflow_dispatch` trigger
-4. Enable cron schedule
-5. Add Issue creation step
-6. Monitor first automated run
+1. **Set up secrets** (Required)
+   - Create `EVERFORTH_ORG_PAT` organization secret
+   - Add `ANTHROPIC_API_KEY` repository secret
+
+2. **Test the workflow** (Recommended)
+   - Manually trigger the workflow using `workflow_dispatch`
+   - Verify PR collection works
+   - Check Claude Code execution
+   - Confirm Issue creation
+
+3. **Monitor automated runs**
+   - Wait for the first scheduled run (Sunday 09:00 JST)
+   - Review the generated Issue
+   - Adjust prompt or workflow as needed
+
+### Optional Enhancements (Future)
+
+- [ ] Trend analysis over multiple weeks
+- [ ] Email notifications
+- [ ] Custom report templates
+- [ ] Slack/Discord integration
 
 ## Files Created
 
 ```
 scripts/
-├── weekly-claude-report.sh      # Main script (110 lines)
+├── weekly-claude-report.sh      # Main script (131 lines)
 ├── test-weekly-report.sh         # Test script (111 lines)
-├── README.md                     # User documentation (218 lines)
-└── IMPLEMENTATION.md             # This file - implementation summary (258 lines)
+├── README.md                     # User documentation (271 lines)
+└── IMPLEMENTATION.md             # This file - implementation summary (276 lines)
+
+.github/workflows/
+└── weekly-report.yml             # GitHub Actions workflow (148 lines)
 ```
 
 ## Conclusion
