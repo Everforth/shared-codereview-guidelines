@@ -75,9 +75,11 @@ jobs:
         if: steps.collect.outputs.skip_report == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DATE_RANGE: ${{ steps.collect.outputs.date_range }}
+          PR_COUNT: ${{ steps.collect.outputs.pr_count }}
         run: |
           # Create issue title
-          ISSUE_TITLE="週次Claudeレビューレポート - ${{ steps.collect.outputs.date_range }}"
+          ISSUE_TITLE="週次Claudeレビューレポート - ${DATE_RANGE}"
 
           # Read Claude's response from the action output
           # Note: claude-code-action@beta outputs the response to a file or stdout
@@ -94,24 +96,20 @@ jobs:
           PROMPT_CONTENT=$(cat prompt.txt)
 
           # Create issue body
-          cat > issue-body.md <<'EOF'
+          cat > issue-body.md <<EOF
 ## 📊 週次Claudeレビューレポート
 
 ### 対象期間
-${{ steps.collect.outputs.date_range }}
+${DATE_RANGE}
 
 ### PR数
-合計 **${{ steps.collect.outputs.pr_count }}** 件のPRを分析しました。
+合計 **${PR_COUNT}** 件のPRを分析しました。
 
 ---
 
 ## Claude Code による評価
 
-EOF
-          # Append Claude response (if we have it from the action)
-          echo "$CLAUDE_RESPONSE" >> issue-body.md
-
-          cat >> issue-body.md <<'EOF'
+${CLAUDE_RESPONSE}
 
 ---
 
@@ -120,11 +118,9 @@ EOF
 <details>
 <summary>PR一覧（クリックして展開）</summary>
 
-```
-EOF
-          cat prompt.txt >> issue-body.md
-          cat >> issue-body.md <<'EOF'
-```
+\`\`\`
+${PROMPT_CONTENT}
+\`\`\`
 
 </details>
 
@@ -136,7 +132,7 @@ EOF
           # Create the issue
           gh issue create \
             --repo "${{ github.repository }}" \
-            --title "$ISSUE_TITLE" \
+            --title "${ISSUE_TITLE}" \
             --body-file issue-body.md \
             --label "weekly-report,automated"
 
