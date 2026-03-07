@@ -105,7 +105,7 @@ $pr_list
 echo "" >&2
 echo "=== Executing Claude Code ===" >&2
 echo "" >&2
-claude "$PROMPT"
+claude -p "$PROMPT"
 
 # Cleanup
 rm -rf "$TEMP_DIR"
