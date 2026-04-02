@@ -104,8 +104,7 @@ CREATE TYPE order_status AS ENUM ('draft', 'submitted', 'confirmed', 'cancelled'
 export class Conversation {
   @Column({
     type: 'enum',
-    enum: ConversationAgentAll,
-    enumName: 'conversation_agent',  // ← 必ず固定名を指定
+    enum: Object.values(ConversationAgentAll).sort(), // 並び順を固定
     default: ConversationAgentAll.salesAgent
   })
   agent: ConversationAgentAll;
