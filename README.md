@@ -20,6 +20,7 @@
 ### 週次 Refine Suggest
 
 - `shared-refine-suggest-caller.yml` を配置したリポジトリで、毎週月曜 10:00 JST に自動実行されます（`workflow_dispatch` で手動実行も可能）。
+  - 実行タイミングを変えたい場合は、配置先リポジトリの `shared-refine-suggest-caller.yml` 内 `schedule.cron` を任意の値に書き換えてください（cron は UTC 指定）。
 - 直近 1 週間に Merge された PR の周辺ファイル（import/export/relation で 1 ホップ先まで）を対象に、最も古い機能単位 1 つに対してパターンレビューを実行し、検出された指摘ごとに Issue を作成します。
 - 実行内容の詳細は [`code-refine/prompt.md`](./code-refine/prompt.md) を参照してください。
 - 各リポジトリ側に `.claude/commands/pattern-review.md` を用意する必要があります（プロンプトから参照されます）。
