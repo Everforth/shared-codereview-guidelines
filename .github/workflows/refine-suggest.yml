@@ -53,5 +53,4 @@ jobs:
           direct_prompt: ${{ steps.load_prompt.outputs.prompt }}
           custom_instructions: |
             ultrathink してください。
-            常に日本語で返信してください。
           max_turns: "100"
