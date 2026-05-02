@@ -1,0 +1,56 @@
+name: Refine Suggest
+
+on:
+  workflow_call:
+    secrets:
+      ANTHROPIC_API_KEY:
+        required: true
+
+jobs:
+  refine-suggest:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Clone shared codereview guidelines
+        run: |
+          git clone --depth 1 https://github.com/Everforth/shared-codereview-guidelines.git
+          echo "Guidelines repository cloned successfully"
+
+      - name: Load refine prompt
+        id: load_prompt
+        run: |
+          PROMPT_PATH="shared-codereview-guidelines/code-refine/prompt.md"
+          if [ ! -s "$PROMPT_PATH" ]; then
+            echo "Prompt file not found or empty: $PROMPT_PATH" >&2
+            exit 1
+          fi
+          {
+            echo 'prompt<<REFINE_PROMPT_EOF'
+            cat "$PROMPT_PATH"
+            echo REFINE_PROMPT_EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          additional_permissions: |
+            actions: read
+          initial_prompt: ${{ steps.load_prompt.outputs.prompt }}
+          custom_instructions: |
+            ultrathink してください。
+            常に日本語で返信してください。
+          max_turns: "100"
+          permission_mode: "bypassPermissions"
