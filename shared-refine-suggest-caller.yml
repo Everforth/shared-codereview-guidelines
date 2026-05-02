@@ -1,0 +1,19 @@
+name: Refine Suggest
+
+on:
+  schedule:
+    # 毎週月曜日 10:00 JST (01:00 UTC)
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
+
+jobs:
+  refine-suggest:
+    uses: Everforth/shared-codereview-guidelines/.github/workflows/refine-suggest.yml@main
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+      id-token: write
+      actions: read
