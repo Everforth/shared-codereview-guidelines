@@ -1,7 +1,7 @@
 #!/bin/bash
 # scripts/weekly-claude-report.sh
 # Weekly Claude Code review report generator
-# Collects PRs with EF-guideline-called label from Everforth Organization
+# Collects PRs with EF-guideline-called label from configured Organizations
 
 set -euo pipefail
 
@@ -22,7 +22,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Configuration
-ORG="Everforth"
+ORGS=("Everforth" "acetokyo-com")
 DAYS_BACK=7
 LABEL="EF-guideline-called"
 OUTPUT_FILE="claude-report-data.json"
@@ -38,16 +38,24 @@ else
 fi
 
 echo "=== Weekly Claude Report Generator ===" >&2
-echo "Organization: $ORG" >&2
+echo "Organizations: ${ORGS[*]}" >&2
 echo "Looking back: $DAYS_BACK days (since $CUTOFF_DATE)" >&2
 echo "Label filter: $LABEL" >&2
 echo "" >&2
 
-# Step 1: Fetch repository list
-echo "[1/3] Fetching repositories from $ORG..." >&2
-repos=$(gh repo list "$ORG" --limit 1000 --json name --jq '.[].name')
+# Step 1: Fetch repository list from all organizations
+echo "[1/3] Fetching repositories from ${ORGS[*]}..." >&2
+repos=""
+for org in "${ORGS[@]}"; do
+  echo -n "  $org... " >&2
+  org_repos=$(gh repo list "$org" --limit 1000 --json nameWithOwner --jq '.[].nameWithOwner')
+  org_count=$([ -n "$org_repos" ] && echo "$org_repos" | wc -l | tr -d ' ' || echo 0)
+  echo "$org_count repositories" >&2
+  repos="${repos}${org_repos}"$'\n'
+done
+repos=$(echo "$repos" | sed '/^$/d')
 repo_count=$(echo "$repos" | wc -l | tr -d ' ')
-echo "Found $repo_count repositories" >&2
+echo "Found $repo_count repositories total" >&2
 echo "" >&2
 
 # Step 2: Scan repositories for labeled PRs
@@ -57,7 +65,7 @@ for repo in $repos; do
   echo -n "  Checking $repo... " >&2
 
   # Get PRs with EF-guideline-called label (all states)
-  prs=$(gh pr list --repo "$ORG/$repo" \
+  prs=$(gh pr list --repo "$repo" \
     --label "$LABEL" \
     --state all \
     --limit 100 \
@@ -71,7 +79,8 @@ for repo in $repos; do
   count=$(echo "$filtered_prs" | jq 'length')
   if [ "$count" -gt 0 ]; then
     echo "$count PRs found" >&2
-    echo "$filtered_prs" > "$TEMP_DIR/$repo.json"
+    safe_name=$(echo "$repo" | tr '/' '_')
+    echo "$filtered_prs" > "$TEMP_DIR/$safe_name.json"
     pr_count=$((pr_count + count))
   else
     echo "no PRs" >&2
